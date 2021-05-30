@@ -1,94 +1,134 @@
 // parent component
 class IndecisionApp extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleDeleteOptions = this.handleDeleteOptions.bind(this);
+        this.handlePick = this.handlePick.bind(this);
+        this.handleAddOption = this.handleAddOption.bind(this);
+        this.state = {
+            options: []
+        };
+    }
+
+    handleDeleteOptions() {
+        this.setState(() => {
+            return {
+                options: []
+            };
+        }); 
+    }
+
+    handlePick() {
+        // Math.random() generates a number between 0 and 1, where 1 is not inclusive
+        const randomNum = Math.floor(Math.random() * this.state.options.length);
+        const option = this.state.options[randomNum];
+        
+        alert(option);
+    }
+
+    handleAddOption(option) {
+        if(!option) {
+            return 'Enter valid value to add item';
+        } else if(this.state.options.indexOf(option) > -1) {
+            return 'This option already exist';
+        }
+
+        this.setState((prevState) => {
+            return {
+                options: prevState.options.concat(option)
+            };
+        });
+    }
+
     render() {
         const title = 'Indecision';
         const subtitle = 'Put your life in the hands of a computer';
-        const options = ['Thing One', 'Thing Two', 'Thing Three'];
-
+      
         return (
             <div>
                 <Header title={title} subtitle={subtitle} />
-                <Action />
-                <Options options={options} />
-                <AddOption />
+                <Action 
+                    hasOptions={this.state.options.length > 0} 
+                    handlePick={this.handlePick}
+                />
+                <Options 
+                    options={this.state.options} 
+                    handleDeleteOptions={this.handleDeleteOptions}
+                />
+                <AddOption 
+                    handleAddOption={this.handleAddOption}
+                />
             </div>
         );
     }
 }
 
-class Header extends React.Component {
-    render() {
-        return (
-            <div>
-                <h1>{this.props.title}</h1>
-                <h2>{this.props.subtitle}</h2>
-            </div>
-        );
-    }
+const Header = (props) => {
+    return (
+        <div>
+            <h1>{props.title}</h1>
+            <h2>{props.subtitle}</h2>
+        </div>
+    );
 }
 
-class Action extends React.Component {
-    handlePick() {
-        alert('handlePick');
-    }
+const Action = (props) => {
+    return (
+        <div>
+            <button 
+                disabled={!props.hasOptions} 
+                onClick={props.handlePick}
+            >
+                What should I do?
+            </button>
+        </div>
+    );
+};
 
-    render() {
-        return (
-            <div>
-                <button onClick={this.handlePick}>What should I do?</button>
-            </div>
-        );
-    }
-}
-
-class Options extends React.Component {
-    // override the constructor to ensure that the event handler has access to the this keyword within the context
-    constructor(props) {
-        super(props);
-        this.handleRemoveAll = this.handleRemoveAll.bind(this);
-    }
-
-    handleRemoveAll() {
-        console.log(this.props.options);
-        // alert('Some message!');
-    }
-
-    render() {
-        return (
-            <div>
-                <button onClick={this.handleRemoveAll}>Remove All</button>
-                {
-                    this.props.options.map((option) => <Option key={option} optionText={option} />)
-                }
-            </div>
-        );
-    }
-}
+const Options = (props) => {
+    return (
+        <div>
+            <button onClick={props.handleDeleteOptions}>Remove All</button>
+            {
+                props.options.map((option) => <Option key={option} optionText={option} />)
+            }
+        </div>
+    );
+};
 
 // child component to Options component
-class Option extends React.Component {
-    render() {
-        return (
-            <div>              
-                {this.props.optionText}
-            </div>
-        );
-    }
+const Option = (props) => {
+    return (
+        <div>              
+            {props.optionText}
+        </div>
+    );
 }
 
 class AddOption extends React.Component {
+    constructor(props){
+        super(props);
+        this.handleAddOption = this.handleAddOption.bind(this);
+        this.state = {
+            error: undefined
+        };
+    }
+
     handleAddOption(e) {        
         e.preventDefault();
         const option = e.target.elements.option.value.trim();
+        const error = this.props.handleAddOption(option);
 
-        if(option) {
-            alert('Option added!');
-        }
+        this.setState(() => {
+            // es6 syntax; this is equivalent to => return {error: error}
+            return { error };
+        });
     }
 
     render() {
         return (
             <div>
+                {this.state.error && <p>{this.state.error}</p>}
                 <form onSubmit={this.handleAddOption}>
                     <input type="text" name="option"/>
                     <button>Add Option</button>
@@ -97,6 +137,17 @@ class AddOption extends React.Component {
         );
     }
 }
+
+// const User = (props) => {
+//     return (
+//         <div>
+//             <p>Name: {props.name} </p>
+//             <p>Age: {props.age} </p>
+//         </div>
+//     );
+// }
+
+// ReactDOM.render(<User name="Devony Powell" age={28} />, document.getElementById('app'));
 
 ReactDOM.render(<IndecisionApp />, document.getElementById('app'));
 
@@ -115,6 +166,10 @@ NOTES:
 - React enforce the the name of the component first letter MUST be uppercase. This is how react differentiate 
   component class and regualar html
 - Inside of a React component, the render method, can return full fledge jsx
+- Whenever you create an event handler inside of a component, you need to override the constructor to ensure that the event handler has access to the this keyword within the context and pass to the super(props). If you don't need to use that this keyword inside of the event handler, then you don't need to override the constructor within that component
+- child components can fire events by calling an event handler inisde of the parent component
+- props are readonly, so child components cannot change anything within that
+- props is another way of saying input in angular... for example, pass down a prop(input) to child components
 
 *Component Props*
  - at the very core, components props allows components in react to communicate with one another
@@ -153,7 +208,14 @@ NOTES:
         }
     
   *Component State*
-   - 
+   - create component state in constructor 
+   - set component state using this.setState((prevState) => {
+       return {
+        // set actual state here
+       };
+   });
+
+  
  
   BEST PRACTICES
 - on the return on the render method inside of the React component, it is a good habit to ALWAYS define a root div
