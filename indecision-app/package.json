@@ -2,7 +2,8 @@
   "scripts": {
     "babel": "babel src/app.js --out-file=public/scripts/app.js --presets=env,react",
     "babel:watch": "babel src/app.js --out-file=public/scripts/app.js --presets=env,react --watch",
-    "live-server": "live-server public"
+    "live-server": "live-server public",
+    "babel:watch:counter-example": "babel src/playground/counter-example.js --out-file=public/scripts/app.js --presets=env,react --watch"
   },
   "name": "indecision-app",
   "version": "1.0.0",
