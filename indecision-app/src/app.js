@@ -12,7 +12,7 @@ class IndecisionApp extends React.Component {
     }
 
     componentDidMount() {
-        // JSON.parse() could throw and exception, so wrap in try..catch to prevent the code from cashing
+        // JSON.parse() could throw an exception, so wrap in try..catch to prevent the code from cashing
         
         try {
             const json = localStorage.getItem('options');
