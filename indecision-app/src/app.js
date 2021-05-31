@@ -7,8 +7,38 @@ class IndecisionApp extends React.Component {
         this.handleAddOption = this.handleAddOption.bind(this);
         this.handleDeleteOption = this.handleDeleteOption.bind(this);
         this.state = {
-            options: props.options
+            options: []
         };
+    }
+
+    componentDidMount() {
+        // JSON.parse() could throw and exception, so wrap in try..catch to prevent the code from cashing
+        
+        try {
+            const json = localStorage.getItem('options');
+            const options = JSON.parse(json);
+    
+            // handle edge case when localStorage does not have any items
+            if(options) {
+                this.setState(() => ({ options }) );
+            }
+        } catch (e) {
+            // Do nothing
+        }
+
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        // if prevState does not equal to current state, something changed so update localStorage
+        if(prevState.options.length !== this.state.options.length) {
+            const json = JSON.stringify(this.state.options);
+            
+            localStorage.setItem('options', json);
+        }
+    }
+
+    componentWillUnmount() {
+        console.log('componentWIllUnmount!');
     }
 
     handleDeleteOptions() {
@@ -62,10 +92,6 @@ class IndecisionApp extends React.Component {
     }
 }
 
-IndecisionApp.defaultProps = {
-    options: []
-}
-
 const Header = (props) => {
     return (
         <div>
@@ -96,6 +122,7 @@ const Options = (props) => {
     return (
         <div>
             <button onClick={props.handleDeleteOptions}>Remove All</button>
+            {props.options.length === 0 && <p>Please add an option to get started!</p>}
             {
                 props.options.map((option) => (
                     <Option 
@@ -141,6 +168,11 @@ class AddOption extends React.Component {
 
         // es6 syntax; this is equivalent to => return {error: error}
         this.setState(() => ({ error }));
+
+        // wipe input if there is no error
+        if(!error) {
+            e.target.elements.option.value = '';
+        }
     }
 
     render() {
@@ -165,7 +197,7 @@ class AddOption extends React.Component {
 //     );
 // }
 
-// ReactDOM.render(<User name="Devony Powell" age={28} />, document.getElementById('app'));
+// ReactDOM.render(<User name="Devony" age={58} />, document.getElementById('app'));
 
 ReactDOM.render(<IndecisionApp />, document.getElementById('app'));
 
