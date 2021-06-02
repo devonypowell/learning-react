@@ -1,9 +1,8 @@
 {
   "scripts": {
-    "build-babel": "babel src/app.js --out-file=public/scripts/app.js --presets=env,react",
-    "build-babel-watch": "babel src/app.js --out-file=public/scripts/app.js --presets=env,react --watch",
-    "build": "webpack --watch",
-    "serve": "live-server public/"
+    "build": "webpack",
+    "serve": "live-server public/",
+    "dev-server": "webpack-dev-server"
   },
   "name": "indecision-app",
   "version": "1.0.0",
@@ -20,6 +19,7 @@
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "validator": "^8.0.0",
-    "webpack": "^3.1.0"
+    "webpack": "^3.1.0",
+    "webpack-dev-server": "^2.5.1"
   }
 }
