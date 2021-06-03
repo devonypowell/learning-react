@@ -2,7 +2,6 @@ import React from 'react';
 import Model from 'react-modal';
 
 const OptionModal = (props) => (
-
   <Model
     isOpen={!!props.selectedOption}
     onRequestClose={props.handleClearSelectedOption}

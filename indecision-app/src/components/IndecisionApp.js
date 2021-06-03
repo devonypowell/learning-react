@@ -27,11 +27,7 @@ export default class IndecisionApp extends React.Component {
         const randomNum = Math.floor(Math.random() * this.state.options.length);
         const option = this.state.options[randomNum];
         
-        this.setState(() => {
-            return {
-                selectedOption: option
-            };
-        });
+        this.setState(() => ({selectedOption: option}));
     }
 
     handleAddOption = (option) => {
@@ -46,16 +42,11 @@ export default class IndecisionApp extends React.Component {
 
     handleClearSelectedOption = () => {
         // wipe the state when okay button clicked
-        this.setState(() => {
-            return {
-                selectedOption: undefined
-            };
-        });
+        this.setState(() => ({selectedOption: undefined}));
     }
 
     componentDidMount() {
         // JSON.parse() could throw an exception, so wrap in try..catch to prevent the code from cashing
-        
         try {
             const json = localStorage.getItem('options');
             const options = JSON.parse(json);
