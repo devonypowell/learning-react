@@ -3,17 +3,17 @@ import React from 'react';
 
 // child component to Options component
 const Option = (props) => (
-    <div>              
-        {props.optionText}
-        <button 
-            onClick={(e) => {
-                props.handleDeleteOption(props.optionText);
-            }}
-        >
-            remove
-        </button>
-    </div>
+  <div className="option">
+    <p className="option__text">{props.count}. {props.optionText}</p>
+    <button
+      onClick={(e) => {
+        props.handleDeleteOption(props.optionText);
+      }}
+      className="button button--link"
+    >
+      remove
+    </button>
+  </div>
 );
 
 export default Option;
-
